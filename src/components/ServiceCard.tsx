@@ -4,7 +4,7 @@ type Props = serviceOrder;
 
 export default function ServiceCard({ name, model, defect, status}: Props) {
   return (
-    <li className={`flex flex-col items-center p-4 border rounded-md max-w-60
+    <li className={`flex flex-col items-center p-4 border dark:border-black rounded-md max-w-60
       ${status === "Aberto" ? "bg-green-400" : "bg-gray-400 opacity-80"}
     `}>
       <h4 className="font-bold text-wrap text-center text-xl mb-2">{name}</h4>
