@@ -68,7 +68,7 @@ export default function NewServiceForm({ addOrder }: Props) {
         type="submit"
         className="bg-blue-500 rounded-md text text-slate-100 py-1"
       >
-        Enviar
+        Salvar
       </button>
     </form>
   );
