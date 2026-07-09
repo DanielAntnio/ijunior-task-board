@@ -38,20 +38,20 @@ export default function NewServiceForm({ addOrder }: Props) {
       <input
         type="text"
         name="model"
-        onChange={(e) => setModel(e.target.value)}
+        onChange={(e) => setModel(e.target.value.trim())}
         placeholder="Digite o modelo do seu aparelho"
         className="border rounded-md px-1"
       />
       <input
         type="text"
         name="defect"
-        onChange={(e) => setDefect(e.target.value)}
+        onChange={(e) => setDefect(e.target.value.trim())}
         placeholder="Descreva o defeito"
         className="border rounded-md px-1"
       />
       <select
         name="state"
-        onChange={(e) => setStatus(e.target.value)}
+        onChange={(e) => setStatus(e.target.value.trim())}
         className="border rounded-md px-1"
         defaultValue=""
       >
