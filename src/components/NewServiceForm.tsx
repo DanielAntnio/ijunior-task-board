@@ -27,7 +27,7 @@ export default function NewServiceForm({ addOrder }: Props) {
   }
 
   return (
-    <form onSubmit={submitOrder} className="flex flex-col gap-2 px-4 py-2">
+    <form onSubmit={submitOrder} className="flex flex-col gap-2">
       <input
         type="text"
         name="name"
