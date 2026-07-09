@@ -31,7 +31,7 @@ export default function NewServiceForm({ addOrder }: Props) {
       <input
         type="text"
         name="name"
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => setName(e.target.value.trim())}
         placeholder="Digite seu nome"
         className="border rounded-md px-1"
       />
