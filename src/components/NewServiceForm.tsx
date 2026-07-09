@@ -5,7 +5,7 @@ interface Props {
   addOrder: (newOrder: serviceOrder) => void;
 }
 
-const PossibleStatus = ["Pedente", "Processando", "Concluido"];
+const PossibleStatus = ["Pendente", "Processando", "Concluido"];
 
 export default function NewServiceForm({ addOrder }: Props) {
   const [name, setName] = useState<string>("");
