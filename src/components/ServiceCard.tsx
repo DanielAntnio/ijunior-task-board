@@ -1,6 +1,8 @@
 import type serviceOrder from "../types";
 
-export default function ServiceCard({ name, model, defect, status}: serviceOrder) {
+type Props = serviceOrder;
+
+export default function ServiceCard({ name, model, defect, status}: Props) {
   return (
     <li className={`flex flex-col items-center p-4 border rounded-md max-w-60
       ${status === "Aberto" ? "bg-green-400" : "bg-gray-400 opacity-80"}
