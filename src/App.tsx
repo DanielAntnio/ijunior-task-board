@@ -19,7 +19,7 @@ export default function App() {
           />
         </section>
         <section className="mt-4">
-          <ul className="flex flex-row overflow-x-auto scroll-smooth scrollbar-none gap-y-2 gap-x-4">
+          <ul className="flex flex-row overflow-x-auto flex-wrap justify-evenly gap-y-2 gap-x-4">
             {orders.map((order, pos) => (
               <ServiceCard {...order} key={pos} />
             ))}
