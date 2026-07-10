@@ -42,12 +42,13 @@ export default function NewServiceForm({ addOrder }: Props) {
         placeholder="Digite o modelo do seu aparelho"
         className="border rounded-md px-1 bg-white text-black"
       />
-      <input
-        type="text"
+      <textarea
+        maxLength={500}
+        rows={3}
         name="defect"
         onChange={(e) => setDefect(e.target.value.trim())}
-        placeholder="Descreva o defeito"
-        className="border rounded-md px-1 bg-white text-black"
+        placeholder="Descreva o defeito (maximo de 500 carácteres)"
+        className="border rounded-md px-1 bg-white text-black resize-none"
       />
       <select
         name="state"
