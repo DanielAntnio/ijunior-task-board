@@ -10,7 +10,7 @@ export default function App() {
   return (
     <>
       <Header />
-      <main className="grow px-4 py-2 bg-slate-100 dark:bg-slate-800">
+      <main className="h-[calc(100vh-1.75rem)] px-4 py-2 bg-slate-100 dark:bg-slate-800">
         <section>
           <NewServiceForm
             addOrder={(newOrder: serviceOrder) =>
