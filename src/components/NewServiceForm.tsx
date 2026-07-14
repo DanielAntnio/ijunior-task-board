@@ -1,58 +1,70 @@
-import { useState } from "react";
-import type serviceOrder from "../types";
+import { useRef } from "react";
+import type { ServiceOrderStatus } from "../types";
+import { createServiceOrder } from "../services/serviceOrderService";
 
 interface Props {
-  addOrder: (newOrder: serviceOrder) => void;
+  reRender: () => void;
 }
+const PossibleStatus: ServiceOrderStatus[] = ["done", "in_progress", "open"];
 
-const PossibleStatus = ["Aberto", "Fechado"];
-
-export default function NewServiceForm({ addOrder }: Props) {
-  const [name, setName] = useState<string>("");
-  const [model, setModel] = useState<string>("");
-  const [defect, setDefect] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
+export default function NewServiceForm({ reRender }: Props) {
+  const clientIdRef = useRef<HTMLInputElement | null>(null);
+  const deviceRef = useRef<HTMLInputElement | null>(null);
+  const issueRef = useRef<HTMLTextAreaElement | null>(null);
+  const statusRef = useRef<HTMLSelectElement | null>(null);
 
   function submitOrder(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (name === "" || model === "" || defect === "" || status === "") return;
+    const client_id = Number(clientIdRef.current?.value);
+    if (isNaN(client_id)) return;
 
-    addOrder({
-      name,
-      model,
-      defect,
-      status,
+    const device = deviceRef.current?.value.trim();
+    if (device === undefined || device === "") return;
+
+    const issue = issueRef.current?.value.trim();
+    if (issue === undefined || issue === "") return;
+
+    const status = statusRef.current?.value.trim();
+    if (status === undefined || status === "") return;
+
+    createServiceOrder({
+      client_id,
+      device,
+      issue,
+      status: status as ServiceOrderStatus,
     });
+
+    reRender();
   }
 
   return (
     <form onSubmit={submitOrder} className="flex flex-col gap-2">
       <input
-        type="text"
-        name="name"
-        onChange={(e) => setName(e.target.value.trim())}
+        type="number"
+        name="clientId"
+        ref={clientIdRef}
         placeholder="Digite seu nome"
         className="border rounded-md px-1 bg-white text-black"
       />
       <input
         type="text"
-        name="model"
-        onChange={(e) => setModel(e.target.value.trim())}
+        name="device"
+        ref={deviceRef}
         placeholder="Digite o modelo do seu aparelho"
         className="border rounded-md px-1 bg-white text-black"
       />
       <textarea
         maxLength={500}
         rows={3}
-        name="defect"
-        onChange={(e) => setDefect(e.target.value.trim())}
+        name="issue"
+        ref={issueRef}
         placeholder="Descreva o defeito (maximo de 500 carácteres)"
         className="border rounded-md px-1 bg-white text-black resize-none"
       />
       <select
-        name="state"
-        onChange={(e) => setStatus(e.target.value.trim())}
+        name="status"
+        ref={statusRef}
         className="border rounded-md px-1 bg-white text-black"
         defaultValue=""
       >
@@ -60,7 +72,7 @@ export default function NewServiceForm({ addOrder }: Props) {
           Selecione o status
         </option>
         {PossibleStatus.map((possibleStatus, pos) => (
-          <option value={possibleStatus} key={pos + 1}>
+          <option value={possibleStatus} key={pos}>
             {possibleStatus}
           </option>
         ))}
