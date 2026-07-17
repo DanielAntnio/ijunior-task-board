@@ -1,16 +1,18 @@
 import { useRef } from "react";
 import { createClient } from "../services/clientService";
+import type { Client, CreateClientData } from "../types";
 
 interface Props {
-  reRender: () => void;
+  clientExists: (client: CreateClientData) => boolean;
+  setClients: React.Dispatch<React.SetStateAction<Client[]>>;
 }
 
-export default function NewSClientForm({ reRender }: Props) {
+const NewSClientForm = ({ clientExists, setClients }: Props) => {
   const nameRef = useRef<HTMLInputElement | null>(null);
   const phoneRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
 
-  function submitOrder(e: React.SubmitEvent<HTMLFormElement>) {
+  async function submitOrder(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const name = nameRef.current?.value.trim();
@@ -22,13 +24,16 @@ export default function NewSClientForm({ reRender }: Props) {
     const email = emailRef.current?.value.trim();
     if (email === undefined || email === "") return;
 
-    createClient({
+    const newClientData: CreateClientData = {
       name,
       phone,
       email,
-    });
+    };
 
-    reRender();
+    if (clientExists(newClientData)) return;
+
+    const newClient = await createClient(newClientData);
+    setClients((prev) => [...prev, newClient]);
   }
 
   return (
@@ -56,10 +61,12 @@ export default function NewSClientForm({ reRender }: Props) {
       />
       <button
         type="submit"
-        className="bg-blue-500 rounded-md text text-slate-100 py-1"
+        className="bg-blue-500 rounded-md text text-slate-100 py-1 hover:cursor-pointer"
       >
         Salvar
       </button>
     </form>
   );
-}
+};
+
+export default NewSClientForm;
