@@ -1,39 +1,31 @@
 import { useEffect, useState } from "react";
-import NewServiceForm from "../components/NewServiceForm";
-import ServiceCard from "../components/ServiceCard";
-import type { ServiceOrder } from "../types";
 import { getAllServiceOrders } from "../services/serviceOrderService";
+import { getAllClients } from "../services/clientService";
+import type { Client, ServiceOrder } from "../types";
+import OrdersList from "../components/OrdersList";
 
-
-export default function DashboardPage() {
+const DashboardPage = () => {
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
-  const [update, setUpdate] = useState<number>(0)
+  const [clients, setClients] = useState<Client[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    async function load() {
-        const data = await getAllServiceOrders()
-        setOrders(data)
+    async function loadServices() {
+      const data = await getAllServiceOrders();
+      setOrders(data);
     }
 
-    load()
-  }, [update])
+    async function loadClients() {
+      const data = await getAllClients();
+      setClients(data);
+    }
 
-  return (
-    <>
-      <section>
-        <NewServiceForm
-          reRender={() =>
-            setUpdate((prev) => prev + 1)
-          }
-        />
-      </section>
-      <section className="mt-4">
-        <ul className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-y-2 gap-x-4">
-          {orders.map((order, pos) => (
-            <ServiceCard {...order} key={pos} />
-          ))}
-        </ul>
-      </section>
-    </>
-  );
-}
+    loadServices();
+    loadClients();
+    setLoading(false);
+  }, []);
+
+  return <OrdersList loading={loading} clients={clients} orders={orders} />;
+};
+
+export default DashboardPage;
