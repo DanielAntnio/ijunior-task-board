@@ -1,23 +1,30 @@
 import { useRef } from "react";
-import type { ServiceOrderStatus } from "../types";
+import type {
+  Client,
+  CreateServiceOrderData,
+  ServiceOrder,
+  ServiceOrderStatus,
+} from "../types";
 import { createServiceOrder } from "../services/serviceOrderService";
 
 interface Props {
-  reRender: () => void;
+  orderExists: (order: CreateServiceOrderData) => boolean;
+  setOrders: React.Dispatch<React.SetStateAction<ServiceOrder[]>>;
+  clients: Client[];
 }
-const PossibleStatus: ServiceOrderStatus[] = ["done", "in_progress", "open"];
+const PossibleStatus: ServiceOrderStatus[] = ["open", "in_progress", "done"];
 
-export default function NewServiceForm({ reRender }: Props) {
-  const clientIdRef = useRef<HTMLInputElement | null>(null);
+const NewServiceForm = ({ orderExists, setOrders, clients }: Props) => {
+  const clientIdRef = useRef<HTMLSelectElement | null>(null);
   const deviceRef = useRef<HTMLInputElement | null>(null);
   const issueRef = useRef<HTMLTextAreaElement | null>(null);
   const statusRef = useRef<HTMLSelectElement | null>(null);
 
-  function submitOrder(e: React.SubmitEvent<HTMLFormElement>) {
+  async function submitOrder(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const client_id = Number(clientIdRef.current?.value);
-    if (isNaN(client_id)) return;
+    const clientId = Number(clientIdRef.current?.value);
+    if (isNaN(clientId)) return;
 
     const device = deviceRef.current?.value.trim();
     if (device === undefined || device === "") return;
@@ -26,27 +33,39 @@ export default function NewServiceForm({ reRender }: Props) {
     if (issue === undefined || issue === "") return;
 
     const status = statusRef.current?.value.trim();
-    if (status === undefined || status === "") return;
+    if (status === undefined || !(PossibleStatus as string[]).includes(status))
+      return;
 
-    createServiceOrder({
-      client_id,
+    const newOrderData: CreateServiceOrderData = {
+      clientId,
       device,
       issue,
       status: status as ServiceOrderStatus,
-    });
+    };
 
-    reRender();
+    if (orderExists(newOrderData)) return;
+
+    const newOrder = await createServiceOrder(newOrderData);
+    setOrders((prev) => [...prev, newOrder]);
   }
 
   return (
     <form onSubmit={submitOrder} className="flex flex-col gap-2">
-      <input
-        type="number"
+      <select
         name="clientId"
         ref={clientIdRef}
-        placeholder="Digite seu nome"
         className="border rounded-md px-1 bg-white text-black"
-      />
+        defaultValue=""
+      >
+        <option value="" disabled hidden key={0}>
+          Selecione o cliente
+        </option>
+        {clients.map((client, pos) => (
+          <option value={client.id} key={pos}>
+            {client.name} ({client.email})
+          </option>
+        ))}
+      </select>
       <input
         type="text"
         name="device"
@@ -79,10 +98,12 @@ export default function NewServiceForm({ reRender }: Props) {
       </select>
       <button
         type="submit"
-        className="bg-blue-500 rounded-md text text-slate-100 py-1"
+        className="bg-blue-500 rounded-md text text-slate-100 py-1 hover:cursor-pointer"
       >
         Salvar
       </button>
     </form>
   );
-}
+};
+
+export default NewServiceForm;
