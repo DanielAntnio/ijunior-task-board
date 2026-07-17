@@ -14,19 +14,17 @@ const ServiceOrdersPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    async function loadServices() {
-      const data = await getAllServiceOrders();
-      setOrders(data);
+    async function load() {
+      const ordersData = await getAllServiceOrders();
+      setOrders(ordersData);
+
+      const clientsData = await getAllClients();
+      setClients(clientsData);
+
+      setLoading(false);
     }
 
-    async function loadClients() {
-      const data = await getAllClients();
-      setClients(data);
-    }
-
-    loadServices();
-    loadClients();
-    setLoading(false);
+    load();
   }, []);
 
   async function handleDelete(id: number) {

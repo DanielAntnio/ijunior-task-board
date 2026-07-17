@@ -17,10 +17,10 @@ const ClientsPage = () => {
     async function load() {
       const data = await getAllClients();
       setClients(data);
+      setLoading(false);
     }
 
     load();
-    setLoading(false);
   }, []);
 
   async function handleDelete(id: number) {
