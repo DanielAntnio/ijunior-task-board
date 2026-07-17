@@ -7,6 +7,7 @@ export default function Header() {
         <nav className="flex flex-row text-gray-900 dark:text-gray-100 gap-3">
           <Link to="/">Dashboard</Link>
           <Link to="/clients">Clientes</Link>
+        <Link to="/service-orders">Ordens de Serviço</Link>
         </nav>
     </header>
   )

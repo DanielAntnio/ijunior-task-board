@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import DashboardPage from "./pages/DashboardPage";
 import Header from "./components/Header";
 import ClientsPage from "./pages/ClientsPage";
-// import { ServiceOrdersPage } from "./pages/ServiceOrdersPage";
+import ServiceOrdersPage from "./pages/ServiceOrdersPage";
 
 function MainLayout() {
   return (
@@ -22,7 +22,7 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/clients" element={<ClientsPage />} />
-          {/* <Route path="/service-orders" element={<ServiceOrdersPage />} /> */}
+          <Route path="/service-orders" element={<ServiceOrdersPage />} />
           <Route
             path="*"
             element={
