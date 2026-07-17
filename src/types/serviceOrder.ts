@@ -1,4 +1,4 @@
-export type ServiceOrderStatus = 'open' | 'in_progress' | 'done';
+export type ServiceOrderStatus = "open" | "in_progress" | "done";
 
 export interface ServiceOrder {
   id: number;
@@ -9,4 +9,7 @@ export interface ServiceOrder {
   created_at: string;
 }
 
-export type CreateServiceOrderData = Omit<ServiceOrder, 'id' | 'created_at'>;
+export type CreateServiceOrderData = Omit<
+  ServiceOrder & { clientId: number },
+  "client_id" | "id" | "created_at"
+>;
