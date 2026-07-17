@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
 import type { ServiceOrder } from "../types";
-import { getClientById } from "../services/clientService";
+import { deleteServiceOrder } from "../services/serviceOrderService";
 
-type Props = ServiceOrder;
+type Props = Omit<
+  ServiceOrder & {
+    setOrders: React.Dispatch<React.SetStateAction<ServiceOrder[]>>;
+    name: string;
+    showButtons?: boolean;
+  },
+  "created_at" | "client_id"
+>;
 
-export default function ServiceCard({ client_id, device, issue, status}: Props) {
-  const [ name, setName ] = useState("...")
-
-  useEffect(() => {
-    async function load() {
-      const data = await getClientById(client_id);
-      setName(data.name ?? "Sem nome");
-    }
-
-    load();
-  }, [])
+const ServiceCard = ({
+  name,
+  id,
+  device,
+  issue,
+  status,
+  showButtons = false,
+  setOrders,
+}: Props) => {
+  async function handleDelete(id: number) {
+    await deleteServiceOrder(id);
+    setOrders((prev) => prev.filter((c) => c.id !== id));
+  }
 
   return (
     <li className={`flex flex-col items-center p-4 border dark:border-black rounded-md
@@ -23,6 +32,16 @@ export default function ServiceCard({ client_id, device, issue, status}: Props) 
       <h4 className="font-bold text-wrap text-center text-xl mb-2">{name}</h4>
       <span className="italic underline mb-2">{device}</span>
       <p className="text-base text-center text-balance">{issue}</p>
+      {showButtons && (
+        <button
+          className="hover:cursor-pointer mt-2 bg-slate-50 px-2 rounded-md border"
+          onClick={() => handleDelete(id)}
+        >
+          Excluir
+        </button>
+      )}
     </li>
   );
-}
+};
+
+export default ServiceCard;
