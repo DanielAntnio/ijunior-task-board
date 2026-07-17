@@ -7,4 +7,4 @@ export interface Client {
 }
 
 // O que mandamos no corpo do POST (sem id e created_at, que são gerados pelo servidor)
-export type CreateClientData = Omit<Client, 'id' | 'created_at'>;
+export type CreateClientData = Omit<Client, "id" | "created_at">;
