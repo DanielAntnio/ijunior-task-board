@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import type { ServiceOrder } from "../types";
 import { deleteServiceOrder } from "../services/serviceOrderService";
 
@@ -26,9 +25,11 @@ const ServiceCard = ({
   }
 
   return (
-    <li className={`flex flex-col items-center p-4 border dark:border-black rounded-md
-      ${status === "done" ? "bg-green-400" : "bg-gray-400 opacity-80"}
-    `}>
+    <li
+      className={`flex flex-col items-center p-4 border dark:border-black rounded-md
+      ${status === "done" ? "bg-green-400" : status === "in_progress" ? "bg-amber-400" : "bg-red-400"}
+    `}
+    >
       <h4 className="font-bold text-wrap text-center text-xl mb-2">{name}</h4>
       <span className="italic underline mb-2">{device}</span>
       <p className="text-base text-center text-balance">{issue}</p>
