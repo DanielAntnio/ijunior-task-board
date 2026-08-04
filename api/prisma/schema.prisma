@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Client {
+  id            Int            @id @default(autoincrement())
+  name          String
+  phone         String
+  email         String
+  created_at    DateTime       @default(now())
+  serviceOrders ServiceOrder[]
+}
+
+model ServiceOrder {
+  id         Int      @id @default(autoincrement())
+  client     Client   @relation(fields: [client_id], references: [id])
+  client_id  Int
+  issue      String
+  status     Status
+  created_at DateTime @default(now())
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
