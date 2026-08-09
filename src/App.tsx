@@ -1,3 +1,31 @@
+import { useState } from "react";
+import Header from "./components/Header";
+import NewServiceForm from "./components/NewServiceForm";
+import ServiceCard from "./components/ServiceCard";
+import type serviceOrder from "./types";
+
 export default function App() {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  const [orders, setOrders] = useState<serviceOrder[]>([]);
+
+  return (
+    <>
+      <Header />
+      <main className="h-[calc(100vh-1.75rem)] px-4 py-2 bg-slate-100 dark:bg-slate-800">
+        <section>
+          <NewServiceForm
+            addOrder={(newOrder: serviceOrder) =>
+              setOrders((prev) => [...prev, newOrder])
+            }
+          />
+        </section>
+        <section className="mt-4">
+          <ul className="flex flex-row overflow-x-auto flex-wrap justify-evenly gap-y-2 gap-x-4">
+            {orders.map((order, pos) => (
+              <ServiceCard {...order} key={pos} />
+            ))}
+          </ul>
+        </section>
+      </main>
+    </>
+  );
 }
