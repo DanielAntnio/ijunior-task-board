@@ -15,6 +15,13 @@ export class BadRequestError extends ApiError {
   }
 }
 
+export class UnauthorizeddError extends ApiError {
+  constructor(message: string) {
+    super(message, 401);
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
 export class NotfoundError extends ApiError {
   constructor(message: string) {
     super(message, 404);
