@@ -8,9 +8,8 @@ export const ClientCreateInput = z.object({
   created_at: z.optional(z.date()),
 }) satisfies z.Schema<Prisma.ClientUncheckedCreateInput>;
 
-export const ClientUpdateInput = z.object({
-  name: z.optional(ClientCreateInput.shape.name),
-  email: z.optional(ClientCreateInput.shape.email),
-  phone: z.optional(ClientCreateInput.shape.phone),
-  created_at: ClientCreateInput.shape.created_at,
+export const ClientUpdateInput = ClientCreateInput.partial({
+  email: true,
+  name: true,
+  phone: true,
 }) satisfies z.Schema<Prisma.ClientUncheckedUpdateInput>;

@@ -6,12 +6,12 @@ export const OrderCreateInput = z.object({
   issue: z.string().trim(),
   status: z.string().toUpperCase().trim().pipe(z.enum(Status)),
   created_at: z.optional(z.date()),
-  created_by: z.number()
+  created_by: z.number(),
 }) satisfies z.Schema<Prisma.OrderUncheckedCreateInput>;
 
-export const OrderUpdateInput = z.object({
-  client_id: z.optional(OrderCreateInput.shape.client_id),
-  issue: z.optional(OrderCreateInput.shape.issue),
-  status: z.optional(OrderCreateInput.shape.status),
-  created_at: OrderCreateInput.shape.created_at,
+export const OrderUpdateInput = OrderCreateInput.partial({
+  client_id: true,
+  issue: true,
+  status: true,
+  created_by: true,
 }) satisfies z.Schema<Prisma.OrderUncheckedUpdateInput>;
