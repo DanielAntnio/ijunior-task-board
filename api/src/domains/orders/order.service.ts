@@ -8,15 +8,19 @@ class OrderService {
     return novaTarefa;
   }
 
-  async list() {
-    const tarefas = await prisma.order.findMany();
+  async list(userId: number) {
+    const tarefas = await prisma.order.findMany({
+      where: {
+        created_by: userId,
+      },
+    });
 
     return tarefas;
   }
 
-  async getById(id: number) {
+  async getById(id: number, userId: number) {
     const tarefa = await prisma.order.findUniqueOrThrow({
-      where: { id },
+      where: { id, created_by: userId },
     });
 
     return tarefa;
@@ -24,18 +28,19 @@ class OrderService {
 
   async update({
     id,
+    userId,
     ...data
-  }: { id: number } & Prisma.OrderUncheckedUpdateInput) {
+  }: { id: number; userId: number } & Prisma.OrderUncheckedUpdateInput) {
     const tarefa = await prisma.order.update({
-      where: { id },
+      where: { id, created_by: userId },
       data,
     });
 
     return tarefa;
   }
 
-  async delete(id: number) {
-    await prisma.order.delete({ where: { id } });
+  async delete(id: number, userId: number) {
+    await prisma.order.delete({ where: { id, created_by: userId } });
   }
 }
 

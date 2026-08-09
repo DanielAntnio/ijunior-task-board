@@ -1,16 +1,17 @@
 import type { Request, Response } from "express";
 import { BadRequestError } from "../../utils/api-erros";
 import { OrderService } from "./order.service";
-import {
-  OrderCreateInput,
-  OrderUpdateInput,
-} from "./order.schema";
+import { OrderCreateInput, OrderUpdateInput } from "./order.schema";
 
 class OrderController {
   async create(req: Request, res: Response) {
     if (!req.body) throw new BadRequestError("Deve fornecer Body");
 
-    const createParams = OrderCreateInput.parse(req.body);
+    const userId = req.user!.id;
+    const createParams = OrderCreateInput.parse({
+      ...req.body,
+      created_by: userId,
+    });
 
     const service = new OrderService();
     const tarefa = await service.create(createParams);
@@ -20,33 +21,37 @@ class OrderController {
 
   async list(req: Request, res: Response) {
     const service = new OrderService();
+    const userId = req.user!.id;
 
-    const tarefas = await service.list();
+    const tarefas = await service.list(userId);
     return res.status(200).json(tarefas);
   }
 
   async idExist(req: Request, res: Response) {
     const id = Number(req.params.id);
+    const userId = req.user!.id;
 
     const service = new OrderService();
-    await service.getById(id);
+    await service.getById(id, userId);
 
     return res.status(200);
   }
 
   async getById(req: Request, res: Response) {
     const id = Number(req.params.id);
+    const userId = req.user!.id;
 
     const service = new OrderService();
-    const tarefa = await service.getById(id);
+    const tarefa = await service.getById(id, userId);
 
     return res.status(200).json(tarefa);
   }
 
   async update(req: Request, res: Response) {
-    const id = Number(req.params.id);
     if (!req.body) throw new BadRequestError("Deve fornecer Body");
 
+    const id = Number(req.params.id);
+    const userId = req.user!.id;
     const updateBody = OrderUpdateInput.parse(req.body);
 
     if (Object.values(updateBody).every((value) => value === undefined))
@@ -57,6 +62,7 @@ class OrderController {
     const service = new OrderService();
     const tarefa = await service.update({
       id,
+      userId,
       ...updateBody,
     });
 
@@ -65,9 +71,10 @@ class OrderController {
 
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
+    const userId = req.user!.id;
 
     const service = new OrderService();
-    await service.delete(id);
+    await service.delete(id, userId);
 
     return res.status(204).json({ sucess: true });
   }

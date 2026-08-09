@@ -1,8 +1,11 @@
 import { Router } from "express";
 import { OrderController } from "./order.controller";
+import { authMiddleware } from "../../middlewares/authMiddleware";
 
 const orderRoutes = Router();
 const controller = new OrderController();
+
+orderRoutes.use(authMiddleware);
 
 orderRoutes.head("/:id", controller.idExist);
 
