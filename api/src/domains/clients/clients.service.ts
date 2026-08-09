@@ -3,33 +3,33 @@ import { prisma } from "../../config/prismaClient";
 
 class ClientService {
   async create(data: Prisma.ClientUncheckedCreateInput) {
-    const novaTarefa = await prisma.client.create({ data });
+    const novaClient = await prisma.client.create({ data });
 
-    return novaTarefa;
+    return novaClient;
   }
 
   async list() {
-    const tarefas = await prisma.client.findMany();
+    const clients = await prisma.client.findMany();
 
-    return tarefas;
+    return clients;
   }
 
   async getById(id: number) {
-    const tarefa = await prisma.client.findUniqueOrThrow({ where: { id } });
+    const client = await prisma.client.findUniqueOrThrow({ where: { id } });
 
-    return tarefa;
+    return client;
   }
 
   async update({
     id,
     ...data
   }: { id: number } & Prisma.ClientUncheckedUpdateInput) {
-    const tarefa = await prisma.client.update({
+    const client = await prisma.client.update({
       where: { id },
       data,
     });
 
-    return tarefa;
+    return client;
   }
 
   async delete(id: number) {

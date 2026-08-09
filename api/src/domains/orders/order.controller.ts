@@ -14,17 +14,17 @@ class OrderController {
     });
 
     const service = new OrderService();
-    const tarefa = await service.create(createParams);
+    const order = await service.create(createParams);
 
-    return res.status(201).json(tarefa);
+    return res.status(201).json(order);
   }
 
   async list(req: Request, res: Response) {
     const service = new OrderService();
     const userId = req.user!.id;
 
-    const tarefas = await service.list(userId);
-    return res.status(200).json(tarefas);
+    const orders = await service.list(userId);
+    return res.status(200).json(orders);
   }
 
   async idExist(req: Request, res: Response) {
@@ -42,9 +42,9 @@ class OrderController {
     const userId = req.user!.id;
 
     const service = new OrderService();
-    const tarefa = await service.getById(id, userId);
+    const order = await service.getById(id, userId);
 
-    return res.status(200).json(tarefa);
+    return res.status(200).json(order);
   }
 
   async update(req: Request, res: Response) {
@@ -60,13 +60,13 @@ class OrderController {
       );
 
     const service = new OrderService();
-    const tarefa = await service.update({
+    const order = await service.update({
       id,
       userId,
       ...updateBody,
     });
 
-    return res.status(200).json(tarefa);
+    return res.status(200).json(order);
   }
 
   async delete(req: Request, res: Response) {

@@ -10,16 +10,16 @@ class ClientController {
     const createParams = ClientCreateInput.parse(req.body);
 
     const service = new ClientService();
-    const tarefa = await service.create(createParams);
+    const client = await service.create(createParams);
 
-    return res.status(201).json(tarefa);
+    return res.status(201).json(client);
   }
 
   async list(req: Request, res: Response) {
     const service = new ClientService();
 
-    const tarefas = await service.list();
-    return res.status(200).json(tarefas);
+    const clients = await service.list();
+    return res.status(200).json(clients);
   }
 
   async idExist(req: Request, res: Response) {
@@ -35,9 +35,9 @@ class ClientController {
     const id = Number(req.params.id);
 
     const service = new ClientService();
-    const tarefa = await service.getById(id);
+    const client = await service.getById(id);
 
-    return res.status(200).json(tarefa);
+    return res.status(200).json(client);
   }
 
   async update(req: Request, res: Response) {
@@ -52,12 +52,12 @@ class ClientController {
       );
 
     const service = new ClientService();
-    const tarefa = await service.update({
+    const client = await service.update({
       id,
       ...updateBody,
     });
 
-    return res.status(200).json(tarefa);
+    return res.status(200).json(client);
   }
 
   async delete(req: Request, res: Response) {
