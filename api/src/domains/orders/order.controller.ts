@@ -34,7 +34,7 @@ class OrderController {
     const service = new OrderService();
     await service.getById(id, userId);
 
-    return res.status(200);
+    return res.status(200).json({ success: true });
   }
 
   async getById(req: Request, res: Response) {

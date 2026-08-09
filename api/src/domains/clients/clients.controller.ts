@@ -28,7 +28,7 @@ class ClientController {
     const service = new ClientService();
     await service.getById(id);
 
-    return res.status(200);
+    return res.status(200).json({ success: true });
   }
 
   async getById(req: Request, res: Response) {
