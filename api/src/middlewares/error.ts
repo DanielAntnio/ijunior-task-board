@@ -12,9 +12,9 @@ export function ErrorHandler(
     error.name === "SyntaxError" &&
     error.message === "Unexpected end of JSON input"
   )
-    return res.status(400).json({ erro: "Deve fornecer body" });
+    return res.status(400).json({ error: "Deve fornecer body" });
 
   return res
     .status(error instanceof ApiError ? error.statusCode : 500)
-    .json({ erro: error.message });
+    .json({ error: error.message });
 }
