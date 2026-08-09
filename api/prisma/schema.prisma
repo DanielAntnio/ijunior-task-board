@@ -8,27 +8,30 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
   password String
+  orders   Order[]
 }
 
 model Client {
-  id            Int            @id @default(autoincrement())
-  name          String
-  phone         String
-  email         String
-  created_at    DateTime       @default(now())
-  serviceOrders ServiceOrder[]
+  id         Int      @id @default(autoincrement())
+  name       String
+  phone      String
+  email      String
+  created_at DateTime @default(now())
+  orders     Order[]
 }
 
-model ServiceOrder {
+model Order {
   id         Int      @id @default(autoincrement())
   client     Client   @relation(fields: [client_id], references: [id])
   client_id  Int
   issue      String
   status     Status
   created_at DateTime @default(now())
+  user       User     @relation(fields: [created_by], references: [id])
+  created_by Int
 }
 
 enum Status {
