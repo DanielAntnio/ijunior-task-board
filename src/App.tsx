@@ -1,31 +1,40 @@
-import { useState } from "react";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router";
+import DashboardPage from "./pages/DashboardPage";
 import Header from "./components/Header";
-import NewServiceForm from "./components/NewServiceForm";
-import ServiceCard from "./components/ServiceCard";
-import type serviceOrder from "./types";
+import ClientsPage from "./pages/ClientsPage";
+import ServiceOrdersPage from "./pages/ServiceOrdersPage";
 
-export default function App() {
-  const [orders, setOrders] = useState<serviceOrder[]>([]);
-
+function MainLayout() {
   return (
-    <>
+    <div className="w-full h-dvh flex flex-col">
       <Header />
-      <main className="h-[calc(100vh-1.75rem)] px-4 py-2 bg-slate-100 dark:bg-slate-800">
-        <section>
-          <NewServiceForm
-            addOrder={(newOrder: serviceOrder) =>
-              setOrders((prev) => [...prev, newOrder])
-            }
-          />
-        </section>
-        <section className="mt-4">
-          <ul className="flex flex-row overflow-x-auto flex-wrap justify-evenly gap-y-2 gap-x-4">
-            {orders.map((order, pos) => (
-              <ServiceCard {...order} key={pos} />
-            ))}
-          </ul>
-        </section>
+      <main className="flex flex-col h-max grow px-4 py-2 bg-slate-100 dark:bg-slate-800 *:not-last:mb-4">
+        <Outlet />
       </main>
-    </>
+    </div>
   );
 }
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/clients" element={<ClientsPage />} />
+          <Route path="/service-orders" element={<ServiceOrdersPage />} />
+          <Route
+            path="*"
+            element={
+              <h1 className="text-gray-900 dark:text-gray-100 self-center justify-self-center text-">
+                Página não encontrada 💔
+              </h1>
+            }
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;

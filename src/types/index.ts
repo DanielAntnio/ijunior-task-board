@@ -1,6 +1,2 @@
-export default interface serviceOrder {
-  name: string;
-  model: string;
-  defect: string;
-  status: string;
-}
+export * from "./client";
+export * from "./serviceOrder";
