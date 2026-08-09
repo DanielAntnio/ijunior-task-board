@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { NextFunction } from "express";
 import z from "zod";
-import { BadRequestError } from "../helpers/api-erros";
+import { BadRequestError } from "../utils/api-erros";
 
 export function ZodErrorHandler(
   error: Error,

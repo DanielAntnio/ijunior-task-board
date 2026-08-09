@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { NextFunction } from "express";
-import { ApiError } from "../helpers/api-erros";
+import { ApiError } from "../utils/api-erros";
 
 export function ErrorHandler(
   error: Error,

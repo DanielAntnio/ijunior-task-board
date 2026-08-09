@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { BadRequestError } from "../../helpers/api-erros";
+import { BadRequestError } from "../../utils/api-erros";
 import { ServiceOrderService } from "./service-order.service";
 import {
   ServiceOrderCreateInput,

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { ClientCreateInput, ClientUpdateInput } from "./clients.schema";
 import { ClientService } from "./clients.service";
-import { BadRequestError } from "../../helpers/api-erros";
+import { BadRequestError } from "../../utils/api-erros";
 
 class ClientController {
   async create(req: Request, res: Response) {

@@ -4,7 +4,7 @@ import {
   BadRequestError,
   InternalServerError,
   NotfoundError,
-} from "../helpers/api-erros";
+} from "../utils/api-erros";
 import {
   PrismaClientInitializationError,
   PrismaClientKnownRequestError,
