@@ -56,7 +56,7 @@ class OrderController {
 
     if (Object.values(updateBody).every((value) => value === undefined))
       throw new BadRequestError(
-        "Body deve ter ao menos um paramentro de Tarefa",
+        `Body deve ter ao menos um paramentro de ordem (${Object.keys(OrderUpdateInput.keyof().enum).join(", ")})`,
       );
 
     const service = new OrderService();
