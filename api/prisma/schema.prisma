@@ -28,7 +28,7 @@ model Order {
   client     Client   @relation(fields: [client_id], references: [id])
   client_id  Int
   issue      String
-  status     Status
+  status     Status   @default(OPEN)
   created_at DateTime @default(now())
   user       User     @relation(fields: [created_by], references: [id])
   created_by Int
