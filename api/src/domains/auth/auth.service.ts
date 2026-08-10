@@ -1,7 +1,11 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../../config/prismaClient";
 import { generateToken } from "../../utils/token";
-import { ApiError, UnauthorizeddError } from "../../utils/api-erros";
+import {
+  ApiError,
+  ConflictError,
+  UnauthorizeddError,
+} from "../../utils/api-erros";
 import { Prisma } from "../../../generated/prisma/client";
 
 const SALT_ROUNDS = 10;
@@ -12,7 +16,7 @@ export class AuthService {
       where: { email },
     });
 
-    if (existentUser) throw new ApiError("Email já cadastrado", 409);
+    if (existentUser) throw new ConflictError("Email já cadastrado");
 
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
@@ -33,7 +37,8 @@ export class AuthService {
 
     const isCorrectPassword = await bcrypt.compare(password, user.password);
 
-    if (!isCorrectPassword) throw new UnauthorizeddError("Credenciais inválidas");
+    if (!isCorrectPassword)
+      throw new UnauthorizeddError("Credenciais inválidas");
 
     const token = generateToken({ id: user.id, email: user.email });
 
