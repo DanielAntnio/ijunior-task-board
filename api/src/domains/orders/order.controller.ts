@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { BadRequestError } from "../../utils/api-erros";
 import { OrderService } from "./order.service";
-import { OrderCreateInput, OrderUpdateInput } from "./order.schema";
+import { OrderCreateInput, OrderQuery, OrderUpdateInput } from "./order.schema";
 
 class OrderController {
   async create(req: Request, res: Response) {
@@ -23,12 +23,15 @@ class OrderController {
     const service = new OrderService();
     const userId = req.user!.id;
 
-    const orders = await service.list(userId);
+    const query = OrderQuery.parse(req.query);
+
+    const orders = await service.list(userId, query);
     return res.status(200).json(orders);
   }
 
   async idExist(req: Request, res: Response) {
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
     const userId = req.user!.id;
 
     const service = new OrderService();

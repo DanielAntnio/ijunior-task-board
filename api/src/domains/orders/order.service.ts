@@ -8,10 +8,11 @@ class OrderService {
     return novaOrder;
   }
 
-  async list(userId: number) {
+  async list(userId: number, query: Prisma.OrderWhereInput) {
     const orders = await prisma.order.findMany({
       where: {
         created_by: userId,
+        ...query,
       },
     });
 

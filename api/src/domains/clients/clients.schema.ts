@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Prisma, Status } from "../../../generated/prisma/client";
+import { Prisma } from "../../../generated/prisma/client";
 
 export const ClientCreateInput = z.object({
   name: z.string().trim(),
@@ -13,3 +13,7 @@ export const ClientUpdateInput = ClientCreateInput.partial({
   name: true,
   phone: true,
 }) satisfies z.Schema<Prisma.ClientUncheckedUpdateInput>;
+
+export const ClientSearch = z.object({
+  search: z.optional(z.string().trim()),
+});

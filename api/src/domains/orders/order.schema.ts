@@ -15,3 +15,7 @@ export const OrderUpdateInput = OrderCreateInput.partial({
   status: true,
   created_by: true,
 }) satisfies z.Schema<Prisma.OrderUncheckedUpdateInput>;
+
+export const OrderQuery = OrderUpdateInput.pick({
+  status: true,
+}) satisfies z.Schema<Prisma.OrderWhereInput>;

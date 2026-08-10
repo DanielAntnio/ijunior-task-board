@@ -1,5 +1,9 @@
 import type { Request, Response } from "express";
-import { ClientCreateInput, ClientUpdateInput } from "./clients.schema";
+import {
+  ClientCreateInput,
+  ClientSearch,
+  ClientUpdateInput,
+} from "./clients.schema";
 import { ClientService } from "./clients.service";
 import { BadRequestError } from "../../utils/api-erros";
 
@@ -16,9 +20,11 @@ class ClientController {
   }
 
   async list(req: Request, res: Response) {
-    const service = new ClientService();
+    const { search } = ClientSearch.parse(req.query);
 
-    const clients = await service.list();
+    const service = new ClientService();
+    const clients = await service.list(search);
+
     return res.status(200).json(clients);
   }
 

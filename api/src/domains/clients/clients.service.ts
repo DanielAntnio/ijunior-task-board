@@ -8,8 +8,18 @@ class ClientService {
     return novaClient;
   }
 
-  async list() {
-    const clients = await prisma.client.findMany();
+  async list(search: string | undefined) {
+    const clients = await prisma.client.findMany({
+      where: {
+        OR: !search
+          ? undefined
+          : [
+              { name: { contains: search } },
+              { email: { contains: search } },
+              { phone: { contains: search } },
+            ],
+      },
+    });
 
     return clients;
   }
