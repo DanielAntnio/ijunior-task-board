@@ -6,7 +6,7 @@ const authService = new AuthService();
 
 export class AuthController {
   async me(req: Request, res: Response) {
-    return res.status(200).json({ usuario: req.user });
+    return res.status(200).json({ user: req.user });
   }
 
   async register(req: Request, res: Response) {
