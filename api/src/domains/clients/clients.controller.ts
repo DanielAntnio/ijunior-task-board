@@ -24,6 +24,7 @@ class ClientController {
 
   async idExist(req: Request, res: Response) {
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
 
     const service = new ClientService();
     await service.getById(id);
@@ -33,6 +34,7 @@ class ClientController {
 
   async getById(req: Request, res: Response) {
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
 
     const service = new ClientService();
     const client = await service.getById(id);
@@ -42,6 +44,7 @@ class ClientController {
 
   async update(req: Request, res: Response) {
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
     if (!req.body) throw new BadRequestError("Deve fornecer Body");
 
     const updateBody = ClientUpdateInput.parse(req.body);
@@ -62,6 +65,7 @@ class ClientController {
 
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
 
     const service = new ClientService();
     await service.delete(id);

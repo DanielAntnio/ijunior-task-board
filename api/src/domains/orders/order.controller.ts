@@ -39,6 +39,7 @@ class OrderController {
 
   async getById(req: Request, res: Response) {
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
     const userId = req.user!.id;
 
     const service = new OrderService();
@@ -51,6 +52,8 @@ class OrderController {
     if (!req.body) throw new BadRequestError("Deve fornecer Body");
 
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
+
     const userId = req.user!.id;
     const updateBody = OrderUpdateInput.parse(req.body);
 
@@ -71,6 +74,7 @@ class OrderController {
 
   async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
+    if (isNaN(id)) throw new BadRequestError("Id deve ser um number");
     const userId = req.user!.id;
 
     const service = new OrderService();
