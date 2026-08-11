@@ -26,12 +26,12 @@ model Client {
 
 model Order {
   id         Int      @id @default(autoincrement())
-  client     Client   @relation(fields: [client_id], references: [id])
+  client     Client   @relation(fields: [client_id], references: [id], onDelete: Cascade)
   client_id  Int
   issue      String
   status     Status   @default(OPEN)
   created_at DateTime @default(now())
-  user       User     @relation(fields: [created_by], references: [id])
+  user       User     @relation(fields: [created_by], references: [id], onDelete: Cascade)
   created_by Int
 
   @@unique([client_id, issue, status, created_by])
