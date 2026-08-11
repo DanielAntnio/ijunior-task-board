@@ -9,7 +9,7 @@ if (!process.env.DATABASE_URL) {
 
 import { app } from "./config/expressConfig";
 
-const PORT = process.env.Port;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na PORT ${PORT}`);
