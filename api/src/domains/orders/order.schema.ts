@@ -3,6 +3,7 @@ import { Prisma, Status } from "../../../generated/prisma/client";
 
 export const OrderCreateInput = z.object({
   client_id: z.coerce.number().refine((val) => !isNaN(val) && isFinite(val)),
+  device: z.string().trim(),
   issue: z.string().trim(),
   status: z.string().toUpperCase().trim().pipe(z.enum(Status)),
   created_at: z.optional(z.date()),
@@ -14,6 +15,7 @@ export const OrderUpdateInput = OrderCreateInput.partial({
   issue: true,
   status: true,
   created_by: true,
+  device: true,
 }) satisfies z.Schema<Prisma.OrderUncheckedUpdateInput>;
 
 export const OrderQuery = OrderUpdateInput.pick({
