@@ -1,16 +1,16 @@
 import "dotenv/config";
 
 if (!process.env.JWT_SECRET) {
-  throw new Error('JWT_SECRET não definido nas variáveis de ambiente')
+  throw new Error("JWT_SECRET não definido nas variáveis de ambiente");
 }
 if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL não definido nas variáveis de ambiente')
+  throw new Error("DATABASE_URL não definido nas variáveis de ambiente");
 }
 
 import { app } from "./config/expressConfig";
 
-const PORTA = 3333;
+const PORT = process.env.Port;
 
-app.listen(PORTA, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORTA}`);
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na PORT ${PORT}`);
 });
