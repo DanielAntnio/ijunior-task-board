@@ -1,4 +1,4 @@
-import { Secret, SignOptions } from "jsonwebtoken";
+import { Secret } from "jsonwebtoken";
 import { User } from "../../generated/prisma/client";
 
 declare global {
@@ -12,6 +12,8 @@ declare global {
       DATABASE_HOST: string;
       JWT_SECRET: Secret;
       JWT_EXPIRES_IN: SignOptions["expiresIn"];
+      JWT_REFRESH_SECRET: Secret;
+      JWT_REFRESH_EXPIRES_IN: SignOptions["expiresIn"];
       NODE_ENV: "development" | "production" | "test";
     }
   }

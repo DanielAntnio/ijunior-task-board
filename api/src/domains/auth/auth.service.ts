@@ -1,8 +1,11 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../../config/prismaClient";
-import { generateToken } from "../../utils/token";
 import {
-  ApiError,
+  generateRefreshToken,
+  generateToken,
+  verifyRefreshyToken,
+} from "../../utils/token";
+import {
   ConflictError,
   UnauthorizeddError,
 } from "../../utils/api-erros";
@@ -40,8 +43,42 @@ export class AuthService {
     if (!isCorrectPassword)
       throw new UnauthorizeddError("Credenciais inválidas");
 
-    const token = generateToken({ id: user.id, email: user.email });
+    const acessToken = generateToken({ id: user.id, email: user.email });
+    const refreshToken = generateRefreshToken({ id: user.id });
 
-    return { token, user: { id: user.id, email: user.email } };
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken },
+    });
+
+    return {
+      acessToken,
+      refreshToken,
+      user: { id: user.id, email: user.email },
+    };
+  }
+
+  async refresh(refreshToken: string) {
+    const payload = verifyRefreshyToken(refreshToken);
+
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: payload.id, refreshToken },
+    });
+
+    const acessToken = generateToken({ id: user.id, email: user.email });
+
+    return {
+      acessToken,
+      user: { id: user.id, email: user.email },
+    };
+  }
+
+  async logout(refreshToken: string | undefined) {
+    if (!refreshToken) return;
+
+    await prisma.user.updateMany({
+      where: { refreshToken },
+      data: { refreshToken: null },
+    });
   }
 }
