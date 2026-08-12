@@ -1,10 +1,31 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://trainee.fidelis.workers.dev/api",
-  withCredentials: false,
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
   headers: {
-    Authorization: "Bearer 1d1f9eb5-bd2f-4e53-8716-1b88e3181852",
     "Content-Type": "application/json",
   },
 });
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (
+      error.response?.status === 401 &&
+      !(error.request.responseURL as string).includes("/auth/")
+    ) {
+      window.location.href = "/login";
+    }
+
+    const message = error.response?.data?.error;
+
+    return Promise.reject(
+      new Error(
+        `A comunicação com a api falhou com status ${error.response?.status ?? 500} e a seguinte mensagem:\n${message}`,
+      ) ?? error,
+    );
+  },
+);
