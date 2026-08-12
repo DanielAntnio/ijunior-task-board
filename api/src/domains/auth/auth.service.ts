@@ -5,10 +5,7 @@ import {
   generateToken,
   verifyRefreshyToken,
 } from "../../utils/token";
-import {
-  ConflictError,
-  UnauthorizeddError,
-} from "../../utils/api-erros";
+import { ConflictError, UnauthorizeddError } from "../../utils/api-erros";
 import { Prisma } from "../../../generated/prisma/client";
 
 const SALT_ROUNDS = 10;
@@ -46,11 +43,6 @@ export class AuthService {
     const acessToken = generateToken({ id: user.id, email: user.email });
     const refreshToken = generateRefreshToken({ id: user.id });
 
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
-    });
-
     return {
       acessToken,
       refreshToken,
@@ -62,7 +54,7 @@ export class AuthService {
     const payload = verifyRefreshyToken(refreshToken);
 
     const user = await prisma.user.findUniqueOrThrow({
-      where: { id: payload.id, refreshToken },
+      where: { id: payload.id },
     });
 
     const acessToken = generateToken({ id: user.id, email: user.email });
@@ -71,14 +63,5 @@ export class AuthService {
       acessToken,
       user: { id: user.id, email: user.email },
     };
-  }
-
-  async logout(refreshToken: string | undefined) {
-    if (!refreshToken) return;
-
-    await prisma.user.updateMany({
-      where: { refreshToken },
-      data: { refreshToken: null },
-    });
   }
 }

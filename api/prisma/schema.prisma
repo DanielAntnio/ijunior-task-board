@@ -8,11 +8,10 @@ datasource db {
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  email        String  @unique
-  password     String
-  refreshToken String?
-  orders       Order[]
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  orders   Order[]
 }
 
 model Client {
