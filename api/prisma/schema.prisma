@@ -29,7 +29,7 @@ model Order {
   client_id  Int
   device     String
   issue      String
-  status     Status   @default(OPEN)
+  status     Status   @default(open)
   created_at DateTime @default(now())
   user       User     @relation(fields: [created_by], references: [id], onDelete: Cascade)
   created_by Int
@@ -38,7 +38,7 @@ model Order {
 }
 
 enum Status {
-  OPEN
-  IN_PROGRESS
-  DONE
+  open
+  in_progress
+  done
 }
