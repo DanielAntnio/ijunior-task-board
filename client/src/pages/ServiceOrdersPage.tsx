@@ -1,59 +1,53 @@
 import { useEffect, useState } from "react";
 import NewServiceForm from "../components/NewServiceForm";
-import type { Client, CreateServiceOrderData, ServiceOrder } from "../types";
+import type { Client, ServiceOrder } from "../types";
 import {
   deleteServiceOrder,
   getAllServiceOrders,
 } from "../services/serviceOrderService";
 import { getAllClients } from "../services/clientService";
 import OrdersList from "../components/OrdersList";
+import ErrorComponent from "../components/ErrorComponent";
+import { formatError } from "../utils/error";
 
 const ServiceOrdersPage = () => {
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     async function load() {
-      const ordersData = await getAllServiceOrders();
-      setOrders(ordersData);
+      try {
+        const ordersData = await getAllServiceOrders();
+        setOrders(ordersData);
 
-      const clientsData = await getAllClients();
-      setClients(clientsData);
-
-      setLoading(false);
+        const clientsData = await getAllClients();
+        setClients(clientsData);
+      } catch (err) {
+              setError(formatError(err, "Ocorreu um erro ao buscar dados na api"));
+      } finally {
+        setLoading(false);
+      }
     }
 
     load();
   }, []);
 
   async function handleDelete(id: number) {
-    await deleteServiceOrder(id);
-    setOrders((prev) => prev.filter((c) => c.id !== id));
-  }
-
-  function orderExists({
-    clientId,
-    device,
-    issue,
-    status,
-  }: CreateServiceOrderData) {
-    const order = orders.find(
-      (order) =>
-        order.client_id === clientId &&
-        order.device === device &&
-        order.issue === issue &&
-        order.status === status,
-    );
-
-    return order !== undefined;
+    try {
+      await deleteServiceOrder(id);
+      setOrders((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      setError(formatError(err));
+    }
   }
 
   return (
     <>
       <NewServiceForm
-        orderExists={orderExists}
-        setOrders={setOrders}
+        addOrder={(newOrder) => setOrders((prev) => [...prev, newOrder])}
+        setError={(message) => setError(message)}
         clients={clients}
       />
       <OrdersList
@@ -62,6 +56,9 @@ const ServiceOrdersPage = () => {
         orders={orders}
         handleDelete={handleDelete}
       />
+      {error && (
+        <ErrorComponent error={error} closeError={() => setError("")} />
+      )}
     </>
   );
 };

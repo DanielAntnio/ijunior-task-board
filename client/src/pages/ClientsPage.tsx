@@ -2,52 +2,46 @@ import { useEffect, useState } from "react";
 import ClientCard from "../components/ClientCard";
 import NewClientForm from "../components/NewClientForm";
 import { getAllClients, deleteClient } from "../services/clientService";
-import {
-  deleteServiceOrder,
-  getAllServiceOrders,
-} from "../services/serviceOrderService";
 import Loader from "../components/Loader";
-import type { Client, CreateClientData } from "../types";
+import type { Client } from "../types";
+import ErrorComponent from "../components/ErrorComponent";
+import { formatError } from "../utils/error";
 
 const ClientsPage = () => {
   const [clients, setClients] = useState<Client[]>([]);
+  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function load() {
-      const data = await getAllClients();
-      setClients(data);
-      setLoading(false);
+      try {
+        const data = await getAllClients();
+        setClients(data);
+      } catch (err) {
+        setError(formatError(err, "Ocorreu um erro ao buscar dados na api"));
+      } finally {
+        setLoading(false);
+      }
     }
 
     load();
   }, []);
 
   async function handleDelete(id: number) {
-    await deleteClient(id);
-    setClients((prev) => prev.filter((c) => c.id !== id));
-
-    const data = await getAllServiceOrders();
-    const filteredData = data.filter((order) => order.client_id === id);
-    filteredData.forEach(async (order) => {
-      await deleteServiceOrder(order.id);
-    });
-  }
-
-  function clientExists({ name, phone, email }: CreateClientData) {
-    const client = clients.find(
-      (client) =>
-        client.name === name &&
-        client.email === email &&
-        client.phone === phone,
-    );
-
-    return client !== undefined;
+    try {
+      await deleteClient(id);
+      setClients((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      setError(formatError(err, "Ocorreu um erro ao deletar um cliente"));
+    }
   }
 
   return (
     <>
-      <NewClientForm clientExists={clientExists} setClients={setClients} />
+      <NewClientForm
+        addClient={(NewClient) => setClients((prev) => [...prev, NewClient])}
+        setError={(message) => setError(message)}
+      />
       {loading ? (
         <Loader />
       ) : (
@@ -60,6 +54,9 @@ const ClientsPage = () => {
             />
           ))}
         </ul>
+      )}
+      {error && (
+        <ErrorComponent error={error} closeError={() => setError("")} />
       )}
     </>
   );

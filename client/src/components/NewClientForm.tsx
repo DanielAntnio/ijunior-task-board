@@ -1,69 +1,76 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { createClient } from "../services/clientService";
-import type { Client, CreateClientData } from "../types";
+import type { Client } from "../types";
+import { formatError } from "../utils/error";
 
 interface Props {
-  clientExists: (client: CreateClientData) => boolean;
-  setClients: React.Dispatch<React.SetStateAction<Client[]>>;
+  addClient: (newClient: Client) => void;
+  setError: (message: string) => void;
 }
 
-const NewSClientForm = ({ clientExists, setClients }: Props) => {
+const NewSClientForm = ({ addClient, setError }: Props) => {
+  const [loading, setLoading] = useState(false);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const phoneRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
 
   async function submitOrder(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
 
-    const name = nameRef.current?.value.trim();
-    if (name === undefined || name === "") return;
+    try {
+      const name = nameRef.current?.value.trim();
+      if (!name) throw new Error("O campo nome é obrigatório");
 
-    const phone = phoneRef.current?.value.trim();
-    if (phone === undefined || phone === "") return;
+      const phone = phoneRef.current?.value.trim();
+      if (!phone) throw new Error("O campo telefone é obrigatório");
 
-    const email = emailRef.current?.value.trim();
-    if (email === undefined || email === "") return;
+      const email = emailRef.current?.value.trim();
+      if (!email) throw new Error("O campo email é obrigatório");
 
-    const newClientData: CreateClientData = {
-      name,
-      phone,
-      email,
-    };
+      const newClient = await createClient({
+        name,
+        phone,
+        email,
+      });
 
-    if (clientExists(newClientData)) return;
-
-    const newClient = await createClient(newClientData);
-    setClients((prev) => [...prev, newClient]);
+      addClient(newClient);
+    } catch (err) {
+      setError(formatError(err, "Ocorreu um erro ao enviar o formulário"));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <form onSubmit={submitOrder} className="flex flex-col gap-2">
       <input
         type="text"
-        name="name"
         ref={nameRef}
-        placeholder="Digite seu nome"
+        placeholder="Nome"
         className="border rounded-md px-1 bg-white text-black"
+        required
       />
       <input
         type="tel"
-        name="phone"
         ref={phoneRef}
-        placeholder="Digite seu número de telefone"
+        placeholder="Telefone"
         className="border rounded-md px-1 bg-white text-black"
+        required
       />
       <input
         type="email"
-        name="email"
         ref={emailRef}
-        placeholder="Digite seu email"
+        placeholder="Email"
         className="border rounded-md px-1 bg-white text-black"
+        required
       />
       <button
         type="submit"
+        disabled={loading}
         className="bg-blue-500 rounded-md text text-slate-100 py-1 hover:cursor-pointer"
       >
-        Salvar
+        {loading ? "Enviando..." : "Enviar"}
       </button>
     </form>
   );
