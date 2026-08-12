@@ -5,7 +5,7 @@ export const OrderCreateInput = z.object({
   client_id: z.coerce.number().refine((val) => !isNaN(val) && isFinite(val)),
   device: z.string().trim(),
   issue: z.string().trim(),
-  status: z.string().toUpperCase().trim().pipe(z.enum(Status)),
+  status: z.optional(z.string().toUpperCase().trim().pipe(z.enum(Status))),
   created_by: z.number(),
 }) satisfies z.Schema<Prisma.OrderUncheckedCreateInput>;
 
