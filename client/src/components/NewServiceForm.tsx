@@ -4,14 +4,13 @@ import { createServiceOrder } from "../services/serviceOrderService";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router";
 import { formatError } from "../utils/error";
+import { serviceOrderStatus, statusWithText } from "../utils/consts";
 
 interface Props {
   addOrder: (newOrder: ServiceOrder) => void;
   setError: (message: string) => void;
   clients: Client[];
 }
-
-const PossibleStatus: ServiceOrderStatus[] = ["open", "in_progress", "done"];
 
 const NewServiceForm = ({ addOrder, setError, clients }: Props) => {
   const clientIdRef = useRef<HTMLSelectElement | null>(null);
@@ -46,7 +45,7 @@ const NewServiceForm = ({ addOrder, setError, clients }: Props) => {
       const status = statusRef.current?.value.trim();
       if (
         status === undefined ||
-        !(PossibleStatus as string[]).includes(status)
+        !serviceOrderStatus.includes(status as ServiceOrderStatus)
       )
         throw new Error("O campo status é obrigatório.");
 
@@ -105,11 +104,13 @@ const NewServiceForm = ({ addOrder, setError, clients }: Props) => {
         <option value="" disabled hidden key={0}>
           Selecione o status
         </option>
-        {PossibleStatus.map((possibleStatus, pos) => (
-          <option value={possibleStatus} key={pos}>
-            {possibleStatus}
-          </option>
-        ))}
+        {(Object.keys(statusWithText) as ServiceOrderStatus[]).map(
+          (key, pos) => (
+            <option value={key} key={pos}>
+              {statusWithText[key]}
+            </option>
+          ),
+        )}
       </select>
       <button
         type="submit"

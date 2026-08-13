@@ -1,4 +1,6 @@
-export type ServiceOrderStatus = "open" | "in_progress" | "done";
+import type { serviceOrderStatus } from "../utils/consts";
+
+export type ServiceOrderStatus = (typeof serviceOrderStatus)[number];
 
 export interface ServiceOrder {
   id: number;
