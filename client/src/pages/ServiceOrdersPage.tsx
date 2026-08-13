@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import NewServiceForm from "../components/NewServiceForm";
-import type { Client, ServiceOrder } from "../types";
+import type { Client, ServiceOrder, UpdateServiceOrderData } from "../types";
 import {
   deleteServiceOrder,
   getAllServiceOrders,
+  updateServiceOrder,
 } from "../services/serviceOrderService";
 import { getAllClients } from "../services/clientService";
 import OrdersList from "../components/OrdersList";
@@ -25,7 +26,7 @@ const ServiceOrdersPage = () => {
         const clientsData = await getAllClients();
         setClients(clientsData);
       } catch (err) {
-              setError(formatError(err, "Ocorreu um erro ao buscar dados na api"));
+        setError(formatError(err, "Ocorreu um erro ao buscar dados na api"));
       } finally {
         setLoading(false);
       }
@@ -43,6 +44,15 @@ const ServiceOrdersPage = () => {
     }
   }
 
+  async function handleUpdate(id: number, data: UpdateServiceOrderData) {
+    try {
+      const order = await updateServiceOrder(id, data);
+      setOrders((prev) => prev.map((c) => (c.id !== id ? c : order)));
+    } catch (err) {
+      setError(formatError(err));
+    }
+  }
+
   return (
     <>
       <NewServiceForm
@@ -55,6 +65,7 @@ const ServiceOrdersPage = () => {
         clients={clients}
         orders={orders}
         handleDelete={handleDelete}
+        handleUpdate={handleUpdate}
       />
       {error && (
         <ErrorComponent error={error} closeError={() => setError("")} />

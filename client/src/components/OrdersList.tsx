@@ -1,4 +1,4 @@
-import type { Client, ServiceOrder } from "../types";
+import type { Client, ServiceOrder, UpdateServiceOrderData } from "../types";
 import ServiceCard from "./ServiceCard";
 import Loader from "./Loader";
 
@@ -7,6 +7,7 @@ interface Props {
   clients: Client[];
   orders: ServiceOrder[];
   handleDelete?: (id: number) => Promise<void>;
+  handleUpdate?: (id: number, data: UpdateServiceOrderData) => Promise<void>;
 }
 
 const OrdersList = ({
@@ -14,6 +15,7 @@ const OrdersList = ({
   clients = [],
   orders = [],
   handleDelete,
+  handleUpdate,
 }: Props) => {
   if (loading) return <Loader />;
 
@@ -27,6 +29,7 @@ const OrdersList = ({
           }
           key={pos}
           handleDelete={handleDelete}
+          handleUpdate={handleUpdate}
         />
       ))}
     </ul>

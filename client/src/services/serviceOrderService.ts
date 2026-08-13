@@ -1,5 +1,9 @@
 import { api } from "./api";
-import type { ServiceOrder, CreateServiceOrderData } from "../types";
+import type {
+  ServiceOrder,
+  CreateServiceOrderData,
+  UpdateServiceOrderData,
+} from "../types";
 
 export async function getAllServiceOrders(): Promise<ServiceOrder[]> {
   const response = await api.get<ServiceOrder[]>("/orders");
@@ -15,4 +19,12 @@ export async function createServiceOrder(
 
 export async function deleteServiceOrder(id: number): Promise<void> {
   await api.delete(`/orders/${id}`);
+}
+
+export async function updateServiceOrder(
+  id: number,
+  data: UpdateServiceOrderData,
+): Promise<ServiceOrder> {
+  const response = await api.put<ServiceOrder>(`/orders/${id}`, data);
+  return response.data;
 }
