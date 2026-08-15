@@ -6,6 +6,7 @@ import { formatError } from "../utils/error";
 const Signup = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
@@ -20,8 +21,10 @@ const Signup = () => {
     try {
       const email = emailRef.current?.value;
       const password = passwordRef.current?.value;
+      const confirmation = passwordConfirmRef.current?.value;
 
-      if (!email || !password) throw new Error("Credênciais inválidas!");
+      if (!email || !password || !confirmation || password !== confirmation)
+        throw new Error("Credênciais inválidas!");
       await signup(email, password);
       navigate("/");
     } catch (err: unknown) {
@@ -51,6 +54,13 @@ const Signup = () => {
             type="password"
             ref={passwordRef}
             placeholder="Senha"
+            className="border rounded-md px-1 bg-white text-black"
+            required
+          />
+          <input
+            type="password"
+            ref={passwordConfirmRef}
+            placeholder="Confirme a senha"
             className="border rounded-md px-1 bg-white text-black"
             required
           />
